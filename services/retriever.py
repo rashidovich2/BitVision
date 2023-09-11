@@ -44,14 +44,14 @@ def fetch_price_data():
 
     with open(os.path.join(DIR_PATH, "../store/graph.json"), 'w') as graph_data:
         try:
-            data = []
-            for index, row in dataset("price_data").iterrows():
-                data.append({
+            data = [
+                {
                     "date": moment.date(row["Date"]).format("MM/DD/YY"),
                     "price": row["Close"],
-                    "volume": row["Volume (BTC)"]
-                })
-
+                    "volume": row["Volume (BTC)"],
+                }
+                for index, row in dataset("price_data").iterrows()
+            ]
             graph_data.write(json.dumps({
                 "error": False,
                 "data": data

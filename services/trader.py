@@ -111,11 +111,9 @@ class BaseClient(object):
         Adds the orderbook to the url if base and quote are specified.
         """
 
-        if not base and not quote:
-            return url
-        else:
+        if base or quote:
             url = url + base.lower() + quote.lower() + "/"
-            return url
+        return url
 
     def _request(self, func, url, version=1, *args, **kwargs):
         """
@@ -140,16 +138,14 @@ class BaseClient(object):
         except ValueError:
             json_response = None
         if isinstance(json_response, dict):
-            error = json_response.get('error')
-            if error:
+            if error := json_response.get('error'):
                 raise BitstampError(error)
             elif json_response.get('status') == "error":
                 raise BitstampError(json_response.get('reason'))
 
         if return_json:
             if json_response is None:
-                raise BitstampError(
-                    "Could not decode json for: " + response.text)
+                raise BitstampError(f"Could not decode json for: {response.text}")
             return json_response
 
         return response

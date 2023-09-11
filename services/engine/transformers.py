@@ -101,10 +101,7 @@ def merge_datasets(origin_df, other_sets):
     return merged
 
 def fix_null_vals(df):
-    if not df.isnull().any().any():
-        return df
-    else:
-        return df.fillna(method="ffill")
+    return df if not df.isnull().any().any() else df.fillna(method="ffill")
 
 def add_lag_vars(df, lag=3):
     new_df_dict = {}
